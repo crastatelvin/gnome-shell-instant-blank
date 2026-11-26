@@ -1,0 +1,6 @@
+dist/
+schemas/gschemas.compiled
+locale/
+node_modules/
+.eslintcache
+*.zip

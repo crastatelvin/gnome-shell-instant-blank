@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="instant-blank@crastatelvin.github.io">
+  <schema id="org.gnome.shell.extensions.instant-blank"
+          path="/org/gnome/shell/extensions/instant-blank/">
+
+    <key name="show-quick-setting" type="b">
+      <default>true</default>
+      <summary>Show the tile in Quick Settings</summary>
+      <description>Whether the Blank Screen tile is added to the Quick Settings grid.</description>
+    </key>
+
+    <key name="show-panel-icon" type="b">
+      <default>true</default>
+      <summary>Show an icon in the top bar</summary>
+      <description>Whether the indicator icon is visible in the top status bar.</description>
+    </key>
+
+    <key name="show-power-menu-item" type="b">
+      <default>false</default>
+      <summary>Add an item to the system power menu</summary>
+      <description>Uses private GNOME Shell internals and may stop working after a Shell update.</description>
+    </key>
+
+    <key name="blank-shortcut" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut for blanking the screen</summary>
+      <description>GTK accelerator string, for example ['&lt;Super&gt;b']. Empty means disabled.</description>
+    </key>
+
+    <key name="lock-instead" type="b">
+      <default>false</default>
+      <summary>Lock the screen instead of only blanking it</summary>
+      <description>Calls the screensaver Lock method, which also shows the lock shield.</description>
+    </key>
+
+    <key name="hard-dpms-mode" type="b">
+      <default>false</default>
+      <summary>Use hard DPMS instead of the screensaver</summary>
+      <description>Sets Mutter's PowerSaveMode directly. Input may not wake the display automatically.</description>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,12 @@
+{
+  "name": "Instant Blank Screen",
+  "description": "Immediately blank the screen from Quick Settings, the top bar, the power menu, or a keyboard shortcut. Wakes on mouse/keyboard input, with no password prompt by default.",
+  "uuid": "instant-blank@crastatelvin.github.io",
+  "url": "https://github.com/crastatelvin/gnome-shell-instant-blank",
+  "shell-version": [
+    "51"
+  ],
+  "settings-schema": "org.gnome.shell.extensions.instant-blank",
+  "gettext-domain": "instant-blank@crastatelvin.github.io",
+  "version-name": "1.0.0"
+}
