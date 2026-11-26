@@ -8,5 +8,5 @@
   ],
   "settings-schema": "org.gnome.shell.extensions.instant-blank",
   "gettext-domain": "instant-blank@crastatelvin.github.io",
-  "version-name": "1.0.0"
+  "version-name": "1.1.0"
 }
