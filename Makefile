@@ -14,6 +14,7 @@ build:
 		--extra-source=powerMenu.js \
 		--extra-source=monitors.js \
 		--extra-source=overlay.js \
+		--extra-source=logo.svg \
 		--force --out-dir=dist .
 	@echo "Built $(ZIP)"
 
