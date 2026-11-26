@@ -11,6 +11,8 @@ import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js'
 
 import {ScreenSaver} from './dbus.js';
 import {PowerMenuIntegration} from './powerMenu.js';
+import {MonitorInfo, selectMonitors} from './monitors.js';
+import {BlankOverlays} from './overlay.js';
 
 const ICON_NAME = 'video-display-symbolic';
 const SHORTCUT_KEY = 'blank-shortcut';
@@ -35,7 +37,23 @@ export default class InstantBlankExtension extends Extension {
         this._cancellable = new Gio.Cancellable();
         this._screenSaver = new ScreenSaver(this._cancellable);
         this._settingsIds = [];
+        this._layoutId = 0;
+        this._sessionId = 0;
         this._shortcutRegistered = false;
+
+        this._monitors = new MonitorInfo();
+        this._overlays = new BlankOverlays(this._screenSaver,
+            () => this._onWake());
+        this._refreshMonitors();
+
+        this._layoutId = Main.layoutManager.connect('monitors-changed', () => {
+            this._overlays.clear();
+            this._refreshMonitors();
+        });
+        this._sessionId = Main.sessionMode.connect('updated', () => {
+            if (Main.sessionMode.isLocked)
+                this._overlays.clear();
+        });
 
         this._settingsIds.push(
             this._settings.connect('changed::show-quick-setting',
@@ -44,6 +62,10 @@ export default class InstantBlankExtension extends Extension {
                 () => this._rebuildUi()),
             this._settings.connect('changed::show-power-menu-item',
                 () => this._updatePowerMenu()),
+            this._settings.connect('changed::blank-target',
+                () => this._overlays.clear()),
+            this._settings.connect('changed::target-connectors',
+                () => this._overlays.clear()),
             this._settings.connect(`changed::${SHORTCUT_KEY}`,
                 () => this._updateShortcut()));
 
@@ -63,6 +85,14 @@ export default class InstantBlankExtension extends Extension {
 
     disable() {
         this._destroyUi();
+        this._overlays?.clear();
+
+        if (this._layoutId)
+            Main.layoutManager.disconnect(this._layoutId);
+        if (this._sessionId)
+            Main.sessionMode.disconnect(this._sessionId);
+        this._layoutId = 0;
+        this._sessionId = 0;
 
         if (this._powerMenu) {
             this._powerMenu.disable();
@@ -83,6 +113,18 @@ export default class InstantBlankExtension extends Extension {
         this._screenSaver = null;
         this._cancellable = null;
         this._settings = null;
+    }
+
+    _refreshMonitors() {
+        this._monitors.refresh();
+        this._settings.set_strv('monitor-info', this._monitors.toSettings());
+    }
+
+    _onWake() {
+        this._screenSaver.getActive().then(active => {
+            if (this._toggle)
+                this._toggle.checked = active;
+        });
     }
 
     _rebuildUi() {
@@ -151,9 +193,23 @@ export default class InstantBlankExtension extends Extension {
     }
 
     _activate() {
-        this._screenSaver.activate({
-            lockInstead: this._settings.get_boolean('lock-instead'),
-            hardDpms: this._settings.get_boolean('hard-dpms-mode'),
-        });
+        const target = this._settings.get_string('blank-target');
+
+        if (target === 'all') {
+            this._screenSaver.activate({
+                lockInstead: this._settings.get_boolean('lock-instead'),
+                hardDpms: this._settings.get_boolean('hard-dpms-mode'),
+            });
+            return;
+        }
+
+        const monitors = this._monitors.refresh();
+        const targets = selectMonitors(
+            monitors, target, this._settings.get_strv('target-connectors'));
+
+        if (targets.length === 0)
+            return;
+
+        this._overlays.activate(targets, monitors);
     }
 }

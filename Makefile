@@ -1,6 +1,6 @@
 UUID := instant-blank@crastatelvin.github.io
 DOMAIN := instant-blank@crastatelvin.github.io
-SOURCES := extension.js prefs.js dbus.js powerMenu.js
+SOURCES := extension.js prefs.js dbus.js powerMenu.js monitors.js overlay.js
 ZIP := dist/$(UUID).shell-extension.zip
 
 .PHONY: all build install check pot clean
@@ -12,6 +12,8 @@ build:
 	gnome-extensions pack --podir=po \
 		--extra-source=dbus.js \
 		--extra-source=powerMenu.js \
+		--extra-source=monitors.js \
+		--extra-source=overlay.js \
 		--force --out-dir=dist .
 	@echo "Built $(ZIP)"
 

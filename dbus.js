@@ -64,6 +64,14 @@ export class ScreenSaver {
         await this._setPowerSaveMode(POWER_SAVE_ON);
     }
 
+    async getPowerSaveMode() {
+        return this._getPowerSaveMode();
+    }
+
+    async setPowerSaveMode(value) {
+        await this._setPowerSaveMode(value);
+    }
+
     subscribeActiveChanged(callback) {
         try {
             const id = Gio.DBus.session.signal_subscribe(

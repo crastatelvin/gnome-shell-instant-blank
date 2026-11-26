@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Instant Blank Screen logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2440"/>
+      <stop offset="0.55" stop-color="#2a2350"/>
+      <stop offset="1" stop-color="#131a30"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <rect x="4.75" y="4.75" width="118.5" height="118.5" rx="27" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.5"/>
+  <rect x="24" y="30" width="80" height="52" rx="8" fill="#0b1022" stroke="url(#screen)" stroke-width="3"/>
+  <path d="M64 40a15 15 0 1 0 15 15 12 12 0 0 1-15-15Z" fill="url(#screen)" filter="url(#glow)"/>
+  <path d="M52 94h24l4 9H48Z" fill="#7dd3fc" fill-opacity="0.85"/>
+  <rect x="56" y="88" width="16" height="5" rx="2.5" fill="#7dd3fc" fill-opacity="0.55"/>
+  <circle cx="97" cy="34" r="3" fill="#a5b4fc" filter="url(#glow)"/>
+  <circle cx="31" cy="72" r="2" fill="#7dd3fc" fill-opacity="0.7"/>
+</svg>

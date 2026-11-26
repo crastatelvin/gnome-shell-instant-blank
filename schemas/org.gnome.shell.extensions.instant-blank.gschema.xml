@@ -38,5 +38,30 @@
       <summary>Use hard DPMS instead of the screensaver</summary>
       <description>Sets Mutter's PowerSaveMode directly. Input may not wake the display automatically.</description>
     </key>
+
+    <key name="blank-target" type="s">
+      <default>'all'</default>
+      <summary>Which monitors to blank</summary>
+      <description>One of: all, primary, external, selected. Non-all targets use per-monitor overlays.</description>
+    </key>
+
+    <key name="target-connectors" type="as">
+      <default>[]</default>
+      <summary>Connectors selected for per-monitor blanking</summary>
+      <description>Used when blank-target is 'selected'.</description>
+    </key>
+
+    <key name="monitor-info" type="as">
+      <default>[]</default>
+      <summary>Connected monitor descriptions</summary>
+      <description>Updated by the extension for display in preferences. Format: connector|name|builtin|primary.</description>
+    </key>
+
+    <key name="auto-blank-delay" type="u">
+      <default>0</default>
+      <range min="0" max="1440"/>
+      <summary>Automatic blank delay in minutes</summary>
+      <description>0 disables automatic blanking.</description>
+    </key>
   </schema>
 </schemalist>
