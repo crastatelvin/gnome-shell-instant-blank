@@ -1,45 +1,77 @@
-# Instant Blank Screen
+<div align="center">
+  <img src="logo.png" alt="Instant Blank Screen — sleepy monitor logo" width="180">
+  <h1>Instant Blank Screen</h1>
+  <p><strong>Instantly blank your display — one monitor or all of them — from GNOME Shell.</strong></p>
+  <p>
+    <a href="https://github.com/crastatelvin/gnome-shell-instant-blank/releases/latest"><img src="https://img.shields.io/github/v/release/crastatelvin/gnome-shell-instant-blank?style=for-the-badge&logo=github&color=2f81f7" alt="Latest release"></a>
+    <a href="https://extensions.gnome.org/extension/12018/instant-blank-screen/"><img src="https://img.shields.io/badge/EGO-pending%20review-orange?style=for-the-badge&logo=gnome" alt="EGO status"></a>
+    <img src="https://img.shields.io/badge/GNOME%20Shell-51-blue?style=for-the-badge&logo=gnome&logoColor=white" alt="GNOME Shell 51">
+    <a href="COPYING"><img src="https://img.shields.io/badge/License-GPL--3.0--or--later-blueviolet?style=for-the-badge" alt="License"></a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/github/stars/crastatelvin/gnome-shell-instant-blank?style=flat-square&logo=github" alt="Stars">
+    <img src="https://img.shields.io/github/forks/crastatelvin/gnome-shell-instant-blank?style=flat-square&logo=github" alt="Forks">
+    <img src="https://img.shields.io/github/issues/crastatelvin/gnome-shell-instant-blank?style=flat-square" alt="Issues">
+    <img src="https://img.shields.io/github/commits-since/crastatelvin/gnome-shell-instant-blank/v1.1.0?style=flat-square" alt="Commits since v1.1.0">
+  </p>
+</div>
+
+---
+
+## Screenshots
 
 <p align="center">
-  <img src="logo.svg" alt="Instant Blank Screen logo" width="128" height="128">
+  <img src="screenshots/preferences.png" alt="Instant Blank Screen preferences" width="430">
+  <img src="screenshots/displays.png" alt="Per-monitor targeting in preferences" width="430">
 </p>
+<p align="center"><em>Preferences window — general options and per-monitor targeting.</em></p>
 
-A polished GNOME Shell extension that turns the display off **instantly**, on demand — and can do it automatically after a configurable period of inactivity.
+## Why another blank-screen extension?
 
-It is the proper, open-source replacement for the old trick of adding a `gdbus … SetActive true` custom command to another extension. No subprocesses, no `xset`, no bundled binaries — just native D-Bus and Shell APIs.
+GNOME has an automatic blank timer, but no built-in **instant, on-demand** blank button that works natively on Wayland. The common workaround — a custom command calling `xset dpms force off` — is X11-only, needs a package that may not be installed, and spawns a subprocess from the Shell.
+
+This extension does it properly: native D-Bus calls, a Quick Settings tile, a panel icon, an optional power-menu entry, a global shortcut, per-monitor targeting, and an independent idle timer. No subprocesses, no X11 tools, no bundled binaries.
 
 ## Features
 
-- **Quick Settings tile** — "Blank Screen" in the Quick Settings grid.
-- **Top bar indicator** — a display icon next to the system status area.
-- **Keyboard shortcut** — configurable, e.g. `<Super>b`.
-- **Power-menu item** — optional integration with GNOME's system menu.
-- **Multi-monitor targets** — blank all monitors, the primary monitor, external monitors only, or a selected subset.
-- **Automatic blanking** — blank after N minutes of inactivity; the timer resets on real mouse/keyboard input.
-- **Wakes on input** — move the mouse or press a key to restore the screen.
-- **No lock by default** — unless you enable *Lock instead of blank*.
-- **Hard DPMS mode** — advanced option that drives Mutter's `PowerSaveMode` directly.
+| Feature | What it does |
+|---|---|
+| **Quick Settings tile** | A "Blank Screen" toggle in the Quick Settings grid. |
+| **Top bar icon** | A display indicator next to the system status area. |
+| **Keyboard shortcut** | Configurable accelerator (for example `<Super>b`). |
+| **Power menu item** | Optional entry in GNOME's system menu (private API, opt-in). |
+| **Multi-monitor targets** | All monitors, primary only, external only, or a selected subset. |
+| **Auto-blank** | Blank after N minutes of real inactivity; `0` disables it. |
+| **Wake on input** | Move the mouse or press a key — no password prompt by default. |
+| **Lock mode** | Optional "lock instead of blank" using the GNOME lock screen. |
+| **Hard DPMS** | Advanced mode driving Mutter's `PowerSaveMode` directly. |
 
-The extension does **not** change `idle-delay`, `lock-enabled`, or any other global GNOME setting. Automatic blanking here is independent of GNOME's own screen blanking.
+It deliberately does **not** change `idle-delay`, `lock-enabled`, or any other global GNOME setting.
 
-## How multi-monitor blanking works
+## How it works
 
-GNOME/Mutter exposes only a **global** `PowerSaveMode`; there is no supported per-monitor DPMS API on Wayland. Therefore:
+### Instant blanking
 
-- **All monitors** uses GNOME's screen shield (`org.gnome.ScreenSaver.SetActive`), which covers every monitor and triggers global DPMS-off.
-- **Primary / external / selected** uses black overlay actors sized to each target monitor's geometry. Your windows and display layout remain untouched. Global DPMS is engaged only when every connected monitor is covered, and is restored on wake.
+The default action calls `org.gnome.ScreenSaver.SetActive(true)` on the session bus. On GNOME Wayland this engages the screen shield and drives Mutter's `PowerSaveMode` to `3` (full display-off). Because `lock-enabled` is left alone, it blanks without a password prompt and GNOME wakes it on activity.
 
-Monitor names and connectors are read from Mutter and shown in Preferences, so you can pick exactly which screens to blank.
+### Multi-monitor reality
 
-## How automatic blanking works
+Mutter exposes only a **global** `PowerSaveMode`; there is no supported per-monitor DPMS API on Wayland. Therefore:
 
-The extension uses Mutter's idle monitor via `global.backend.get_core_idle_monitor()` with `add_idle_watch()` and `add_user_active_watch()`. This is the same mechanism GNOME Shell itself uses, so the countdown resets automatically on real input — unlike a plain wall-clock timer. Set the delay to `0` to disable it.
+- **All monitors** → GNOME screen shield (covers every display, global DPMS).
+- **Primary / external / selected** → black overlay actors sized to each monitor's geometry. Windows and layout stay untouched; global DPMS is engaged only when every connected monitor is covered, then restored on wake.
+
+Monitor names and connectors come from Mutter and are listed in Preferences for selection.
+
+### Automatic blanking
+
+The extension uses `global.backend.get_core_idle_monitor()` with `add_idle_watch()` and `add_user_active_watch()` — the same Mutter idle mechanism GNOME Shell itself uses. The countdown resets automatically on real mouse/keyboard input; a plain wall-clock timer would not.
 
 ## Installation
 
 ### From extensions.gnome.org
 
-Search for **Instant Blank Screen** on [extensions.gnome.org](https://extensions.gnome.org/) and use the switch.
+Once the submitted version is approved, find **Instant Blank Screen** on [extensions.gnome.org](https://extensions.gnome.org/extension/12018/instant-blank-screen/) and flip the switch.
 
 ### From source
 
@@ -50,7 +82,7 @@ make install
 gnome-extensions enable instant-blank@crastatelvin.github.io
 ```
 
-Open preferences with:
+Shell only scans the extension directory at startup, so **log out and back in** once after a source install. Open preferences with:
 
 ```bash
 gnome-extensions prefs instant-blank@crastatelvin.github.io
@@ -58,29 +90,32 @@ gnome-extensions prefs instant-blank@crastatelvin.github.io
 
 ## Compatibility
 
-- GNOME Shell **51** (initial releases). The APIs used are unchanged since GNOME 45; wider support will be declared after testing on those releases.
+- GNOME Shell **51** (declared and tested).
+- The APIs used (ESM `Extension`, `SystemIndicator` / `addExternalIndicator`, Mutter idle monitor, `ScreenSaver` D-Bus) are unchanged since GNOME 45; broader support will be declared after testing.
 
-## Building a release ZIP
+## Building and validating
 
 ```bash
-make check
-make build
+make check    # metadata, JS syntax, strict GSettings schema compile
+make build    # dist/instant-blank@crastatelvin.github.io.shell-extension.zip
 ```
 
-`make check` validates `metadata.json`, checks JavaScript syntax and compiles the GSettings schema. `make build` produces `dist/instant-blank@crastatelvin.github.io.shell-extension.zip` with translations, the logo and the schema XML included, and no build scripts or compiled schemas in the package.
+The ZIP contains only the runtime JS, metadata, schema XML, translations, and the logo — no build scripts or compiled schemas.
 
 ## Translations
 
-Translations use gettext. The template is `po/instant-blank@crastatelvin.github.io.pot`. To add a language:
+Gettext template: `po/instant-blank@crastatelvin.github.io.pot`.
 
 ```bash
 cp po/instant-blank@crastatelvin.github.io.pot po/fr.po
-# fill in fr.po, then:
+# translate, then:
 make build
 ```
 
+## Contributing
+
+Issues and pull requests are welcome at https://github.com/crastatelvin/gnome-shell-instant-blank. Please run `make check` before opening a PR.
+
 ## License
 
-GPL-3.0-or-later. See [COPYING](COPYING).
-
-Contributions are welcome — open an issue or a pull request on GitHub.
+GPL-3.0-or-later — see [COPYING](COPYING). Logo and screenshots are part of the same project.
