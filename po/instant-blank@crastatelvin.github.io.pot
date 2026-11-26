@@ -1,13 +1,14 @@
-# Instant Blank Screen translation template.
-# Copyright (C) 2026 crastatelvin
-# This file is distributed under the same license as the instant-blank package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: instant-blank 1.0.0\n"
-"Report-Msgid-Bugs-To: https://github.com/crastatelvin/gnome-shell-instant-blank/issues\n"
-"POT-Creation-Date: 2026-11-26 12:00+0000\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-26 12:09+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,107 +17,220 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:22
+#: extension.js:24 extension.js:226
 msgid "Blank Screen"
 msgstr ""
 
-#: extension.js:23
+#: extension.js:25
 msgid "Turn off the display instantly"
 msgstr ""
 
-#: prefs.js:19
+#: prefs.js:15
+msgid "All monitors"
+msgstr ""
+
+#: prefs.js:16
+msgid "Primary monitor only"
+msgstr ""
+
+#: prefs.js:17
+msgid "External monitors only"
+msgstr ""
+
+#: prefs.js:18 prefs.js:202
+msgid "Selected monitors"
+msgstr ""
+
+#: prefs.js:28
 msgid "General"
 msgstr ""
 
-#: prefs.js:25
-msgid "Where to show it"
-msgstr ""
-
-#: prefs.js:26
-msgid "Choose how you want to trigger the blank screen."
-msgstr ""
-
 #: prefs.js:30
-msgid "Quick Settings tile"
+msgid "Blank your display instantly, on your terms."
 msgstr ""
 
-#: prefs.js:31
-msgid "Add a Blank Screen tile to the Quick Settings menu."
-msgstr ""
-
-#: prefs.js:33
-msgid "Top bar icon"
-msgstr ""
-
-#: prefs.js:34
-msgid "Show the indicator icon in the top status bar."
+#: prefs.js:35
+msgid "Move the mouse or press a key to wake the display."
 msgstr ""
 
 #: prefs.js:36
-msgid "System power menu item"
-msgstr ""
-
-#: prefs.js:37
-msgid ""
-"Also add it to the power menu. Uses private Shell internals and may break "
-"after an update."
-msgstr ""
-
-#: prefs.js:41
-msgid "Keyboard shortcut"
-msgstr ""
-
-#: prefs.js:42
-msgid "For example: <Super>b. Leave empty to disable."
-msgstr ""
-
-#: prefs.js:68
-msgid "Behavior"
+msgid "Dismiss"
 msgstr ""
 
 #: prefs.js:69
-msgid ""
-"By default the screen blanks without locking and wakes on mouse or keyboard "
-"input."
+#, javascript-format
+msgid "Version %s · GPL-3.0-or-later"
 msgstr ""
 
-#: prefs.js:73
+#: prefs.js:70 prefs.js:301
+msgid "1.1.0"
+msgstr ""
+
+#: prefs.js:80
+msgid "About this extension"
+msgstr ""
+
+#: prefs.js:96
+msgid "Instant Blank Screen logo"
+msgstr ""
+
+#: prefs.js:108
+msgid "Quick triggers"
+msgstr ""
+
+#: prefs.js:109
+msgid "Choose how you want to blank the screen."
+msgstr ""
+
+#: prefs.js:113
+msgid "Quick Settings tile"
+msgstr ""
+
+#: prefs.js:114
+msgid "Add a Blank Screen tile to the Quick Settings menu."
+msgstr ""
+
+#: prefs.js:116
+msgid "Top bar icon"
+msgstr ""
+
+#: prefs.js:117
+msgid "Show the indicator icon in the top status bar."
+msgstr ""
+
+#: prefs.js:119
+msgid "System power menu item"
+msgstr ""
+
+#: prefs.js:120
+msgid ""
+"Uses private Shell internals and may need updating after a GNOME release."
+msgstr ""
+
+#: prefs.js:124
+msgid "Keyboard shortcut"
+msgstr ""
+
+#: prefs.js:146
+msgid "Automatic blanking"
+msgstr ""
+
+#: prefs.js:147
+msgid "The timer resets whenever you use the mouse or keyboard."
+msgstr ""
+
+#: prefs.js:151
+msgid "Blank after"
+msgstr ""
+
+#: prefs.js:152
+msgid "Minutes of inactivity. Set to 0 to disable."
+msgstr ""
+
+#: prefs.js:170
+msgid "Uses GNOME idle detection"
+msgstr ""
+
+#: prefs.js:171
+msgid "Videos and games do not reset this timer unless they inhibit idle."
+msgstr ""
+
+#: prefs.js:180
+msgid "Displays"
+msgstr ""
+
+#: prefs.js:181
+msgid ""
+"Choose which screens the blank action covers. Individual monitors use a "
+"black overlay, so your windows and layout stay untouched."
+msgstr ""
+
+#: prefs.js:188
+msgid "Blank target"
+msgstr ""
+
+#: prefs.js:189
+msgid "All monitors uses the GNOME screen shield."
+msgstr ""
+
+#: prefs.js:203
+msgid "Only used when \"Selected monitors\" is the blank target."
+msgstr ""
+
+#: prefs.js:225
+msgid "No monitors detected"
+msgstr ""
+
+#: prefs.js:226
+msgid "They will appear here after the next Shell restart."
+msgstr ""
+
+#: prefs.js:237
+msgid "Built-in"
+msgstr ""
+
+#: prefs.js:237
+msgid "External"
+msgstr ""
+
+#: prefs.js:238
+msgid "Primary"
+msgstr ""
+
+#: prefs.js:257
+msgid "Behavior"
+msgstr ""
+
+#: prefs.js:260
 msgid "Lock instead of blank"
 msgstr ""
 
-#: prefs.js:74
+#: prefs.js:261
 msgid "Show the lock screen instead of only turning the display off."
 msgstr ""
 
-#: prefs.js:76
-msgid "Hard DPMS mode (advanced)"
+#: prefs.js:264
+msgid "Advanced"
 msgstr ""
 
-#: prefs.js:77
+#: prefs.js:265
+msgid "Options most people should leave alone."
+msgstr ""
+
+#: prefs.js:268
+msgid "Hard DPMS mode"
+msgstr ""
+
+#: prefs.js:269
 msgid ""
-"Turn the display off at the hardware level. Mouse or keyboard input may not "
-"wake it; use the shortcut or tile again."
+"Drive display power directly. Input may not wake the screen; use the "
+"shortcut again."
 msgstr ""
 
-#: prefs.js:81
+#: prefs.js:279
 msgid "About"
 msgstr ""
 
-#: prefs.js:82
-msgid "Instant Blank Screen is free software licensed under GPL-3.0-or-later."
+#: prefs.js:280
+msgid "Source and support"
 msgstr ""
 
-#: prefs.js:86
-msgid "Source code and issues"
-msgstr ""
-
-#: prefs.js:91
+#: prefs.js:282
 msgid "GitHub"
 msgstr ""
 
-#: metadata.json
-msgid ""
-"Immediately blank the screen from Quick Settings, the top bar, the power "
-"menu, or a keyboard shortcut. Wakes on mouse/keyboard input, with no password "
-"prompt by default."
+#: prefs.js:290
+msgid "License"
+msgstr ""
+
+#: prefs.js:291
+msgid "GPL-3.0-or-later"
+msgstr ""
+
+#: prefs.js:302
+msgid "crastatelvin"
+msgstr ""
+
+#: prefs.js:305
+msgid "Instantly blank one or all monitors from GNOME Shell."
 msgstr ""
