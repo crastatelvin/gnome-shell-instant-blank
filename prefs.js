@@ -204,6 +204,7 @@ export default class InstantBlankPrefs extends ExtensionPreferences {
         });
         group.add(selected);
         group._selectedRow = selected;
+        group._monitorRows = [];
         return group;
     }
 
@@ -212,19 +213,18 @@ export default class InstantBlankPrefs extends ExtensionPreferences {
         if (!row)
             return;
 
-        let child = row.get_first_child();
-        while (child) {
-            const next = child.get_next_sibling();
+        for (const child of group._monitorRows ?? [])
             row.remove(child);
-            child = next;
-        }
+        group._monitorRows = [];
 
         const monitors = settings.get_strv('monitor-info');
         if (monitors.length === 0) {
-            row.add_row(new Adw.ActionRow({
+            const empty = new Adw.ActionRow({
                 title: _('No monitors detected'),
                 subtitle: _('They will appear here after the next Shell restart.'),
-            }));
+            });
+            row.add_row(empty);
+            group._monitorRows.push(empty);
             return;
         }
 
@@ -249,6 +249,7 @@ export default class InstantBlankPrefs extends ExtensionPreferences {
                     settings.set_strv('target-connectors', next);
             });
             row.add_row(monitorRow);
+            group._monitorRows.push(monitorRow);
         }
     }
 
