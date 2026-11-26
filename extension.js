@@ -40,6 +40,9 @@ export default class InstantBlankExtension extends Extension {
         this._layoutId = 0;
         this._sessionId = 0;
         this._shortcutRegistered = false;
+        this._idleMonitor = null;
+        this._idleWatch = 0;
+        this._activeWatch = 0;
 
         this._monitors = new MonitorInfo();
         this._overlays = new BlankOverlays(this._screenSaver,
@@ -66,6 +69,8 @@ export default class InstantBlankExtension extends Extension {
                 () => this._overlays.clear()),
             this._settings.connect('changed::target-connectors',
                 () => this._overlays.clear()),
+            this._settings.connect('changed::auto-blank-delay',
+                () => this._armIdle()),
             this._settings.connect(`changed::${SHORTCUT_KEY}`,
                 () => this._updateShortcut()));
 
@@ -81,10 +86,12 @@ export default class InstantBlankExtension extends Extension {
         this._rebuildUi();
         this._updatePowerMenu();
         this._updateShortcut();
+        this._armIdle();
     }
 
     disable() {
         this._destroyUi();
+        this._disarmIdle();
         this._overlays?.clear();
 
         if (this._layoutId)
@@ -113,6 +120,53 @@ export default class InstantBlankExtension extends Extension {
         this._screenSaver = null;
         this._cancellable = null;
         this._settings = null;
+    }
+
+    _armIdle() {
+        this._disarmIdle();
+
+        const minutes = this._settings.get_uint('auto-blank-delay');
+        if (minutes === 0)
+            return;
+
+        const monitor = global.backend?.get_core_idle_monitor?.();
+        if (!monitor) {
+            console.warn('[InstantBlank] No idle monitor available');
+            return;
+        }
+
+        this._idleMonitor = monitor;
+        this._idleWatch = monitor.add_idle_watch(
+            minutes * 60 * 1000, () => this._onIdle());
+    }
+
+    _disarmIdle() {
+        if (this._idleMonitor && this._idleWatch) {
+            this._idleMonitor.remove_watch(this._idleWatch);
+            this._idleWatch = 0;
+        }
+        if (this._idleMonitor && this._activeWatch) {
+            this._idleMonitor.remove_watch(this._activeWatch);
+            this._activeWatch = 0;
+        }
+        this._idleMonitor = null;
+    }
+
+    _onIdle() {
+        this._idleWatch = 0;
+
+        if (Main.sessionMode.isLocked) {
+            this._armIdle();
+            return;
+        }
+
+        this._activate();
+
+        this._activeWatch = this._idleMonitor.add_user_active_watch(() => {
+            this._activeWatch = 0;
+            this._overlays.clear();
+            this._armIdle();
+        });
     }
 
     _refreshMonitors() {
